@@ -133,6 +133,7 @@
         align-items: stretch;
         width: 302.083%;
         transform: translateX(0%) translateX(0px);
+        transition: transform 0.5s cubic-bezier(.645,.045,.355,1);
         flex-direction: row;
       }
       .carousel-card {
@@ -184,6 +185,7 @@
       }
       .carousel-name {
         font-size: 14px;
+        margin-top: 5px;
         font-weight: 500;
         margin-bottom: 8px;
         color: #302e2b;
@@ -226,6 +228,36 @@
         .attr("fill", favorites[id] ? "#193DB0" : "#fff")
         .attr("stroke", favorites[id] ? "#193DB0" : "#B6B7B9");
     });
+
+    const $track = $(".carousel-track");
+    const $cards = $track.find(".carousel-card");
+    const visibleCards = 6;
+    let currentIndex = 0;
+    const maxIndex = Math.max(0, $cards.length - visibleCards);
+
+    function updateCarousel() {
+      const cardWidth = $cards.outerWidth(true);
+      const moveX = currentIndex * cardWidth;
+      $track.css("transform", `translateX(-${moveX}px)`);
+      $(".carousel__back-button").prop("disabled", currentIndex === 0);
+      $(".carousel-arrow-right").prop("disabled", currentIndex >= maxIndex);
+    }
+
+    $(".carousel__back-button").on("click", function (e) {
+      e.preventDefault();
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCarousel();
+      }
+    });
+    $(".carousel-arrow-right").on("click", function (e) {
+      e.preventDefault();
+      if (currentIndex < maxIndex) {
+        currentIndex++;
+        updateCarousel();
+      }
+    });
+    updateCarousel();
   }
 
   if (typeof $ === "undefined") {
