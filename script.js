@@ -33,31 +33,38 @@
   function buildHTML() {
     const html = `
       <div class="carousel-container">
-        <h2 class="carousel-title">You Might Also Like</h2>
+        <h2 class="carousel-title">Benzer Ürünler</h2>
         <div class="carousel-track">
-        ${console.log(products)}
           ${products
             .map(
               (product) => `
-            <div class="carousel-card" data-id="${product.id}">
-              <div class="carousel-img-wrap">
-                <img src="${product.img}" alt="${
+                <a class="carousel-card" data-id="${product.id}" href="${
+                product.url
+              }" target="_blank" rel="noopener" tabindex="0" aria-label="${
+                product.name
+              } - ${product.price}">
+                  <div class="carousel-img-wrap">
+                    <img src="${product.img}" alt="${
                 product.name
               }" class="carousel-img" />
-                <span class="carousel-heart${
-                  favorites[product.id] ? " active" : ""
-                }" data-id="${product.id}">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="${
-                    favorites[product.id] ? "#0074e4" : "none"
-                  }" stroke="#0074e4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.6-7-10.2A5.2 5.2 0 0 1 12 5.2a5.2 5.2 0 0 1 7 5.6C19 15.4 12 21 12 21z"/></svg>
-                </span>
-              </div>
-              <div class="carousel-info">
-                <div class="carousel-name">${product.name}</div>
-                <div class="carousel-price">${product.price}</div>
-              </div>
-            </div>
-          `
+                    <button type="button" class="carousel-heart${
+                      favorites[product.id] ? " active" : ""
+                    }" data-id="${
+                product.id
+              }" aria-label="Favorilere ekle/kaldır">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20"><path fill="${
+                            favorites[product.id] ? "#193DB0" : "#fff"
+                          }" fill-rule="evenodd" stroke="${
+                favorites[product.id] ? "#193DB0" : "#B6B7B9"
+              }" d="M19.97 6.449c-.277-3.041-2.429-5.247-5.123-5.247-1.794 0-3.437.965-4.362 2.513C9.57 2.147 7.993 1.2 6.228 1.2c-2.694 0-4.846 2.206-5.122 5.247-.022.135-.112.841.16 1.994.393 1.663 1.3 3.175 2.621 4.373l6.594 5.984 6.707-5.984c1.322-1.198 2.228-2.71 2.62-4.373.273-1.152.183-1.86.162-1.993z" clip-rule="evenodd"></path></svg>
+                    </button>
+                  </div>
+                  <div class="carousel-info">
+                    <div class="carousel-name">${product.name}</div>
+                    <div class="carousel-price">${product.price}</div>
+                  </div>
+                </a>
+              `
             )
             .join("")}
         </div>
@@ -67,17 +74,28 @@
   }
 
   function buildCSS() {
+    if (!$("head link.open-sans-font").length) {
+      $(
+        '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" class="open-sans-font">'
+      ).appendTo("head");
+    }
     const css = `
       .carousel-container {
         margin-top: 32px;
         padding: 16px 0;
         background: #fff;
+        width: 80%;
+        margin: 0 auto;
+        font-family: 'Open Sans', Arial, sans-serif;
       }
       .carousel-title {
         font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 16px;
         color: #222;
+        padding: 15px 0;
+        font-size: 32px;
+        font-family: 'Open Sans', Arial, sans-serif;
       }
       .carousel-track {
         display: flex;
@@ -96,6 +114,7 @@
         position: relative;
         cursor: pointer;
         transition: box-shadow 0.2s;
+        font-family: 'Open Sans', Arial, sans-serif;
       }
       .carousel-card:hover {
         box-shadow: 0 4px 16px rgba(0,0,0,0.12);
@@ -118,11 +137,13 @@
       }
       .carousel-heart {
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 6%;
+        right: 10%;
         cursor: pointer;
         z-index: 2;
         transition: fill 0.2s;
+        background: none;
+        border: none;
       }
       .carousel-heart.active svg {
         fill: #0074e4;
@@ -130,17 +151,20 @@
       .carousel-info {
         padding: 12px;
         text-align: left;
+        font-family: 'Open Sans', Arial, sans-serif;
       }
       .carousel-name {
         font-size: 1rem;
         font-weight: 500;
         margin-bottom: 8px;
         color: #333;
+        font-family: 'Open Sans', Arial, sans-serif;
       }
       .carousel-price {
         font-size: 1rem;
         color: #0074e4;
         font-weight: 600;
+        font-family: 'Open Sans', Arial, sans-serif;
       }
       @media (max-width: 900px) {
         .carousel-card { min-width: 140px; max-width: 160px; }
@@ -158,23 +182,17 @@
   }
 
   function setEvents() {
-    $(".carousel-card").on("click", function (e) {
-      if ($(e.target).closest(".carousel-heart").length) return;
-      const id = $(this).data("id");
-      const product = products.find((p) => p.id === id);
-      if (product && product.url) {
-        window.open(product.url, "_blank");
-      }
-    });
     $(".carousel-heart").on("click", function (e) {
       e.stopPropagation();
+      e.preventDefault();
       const id = $(this).data("id");
       favorites[id] = !favorites[id];
       localStorage.setItem(FAV_KEY, JSON.stringify(favorites));
       $(this).toggleClass("active");
       $(this)
-        .find("svg")
-        .attr("fill", favorites[id] ? "#0074e4" : "none");
+        .find("svg path")
+        .attr("fill", favorites[id] ? "#193DB0" : "#fff")
+        .attr("stroke", favorites[id] ? "#193DB0" : "#B6B7B9");
     });
   }
 
