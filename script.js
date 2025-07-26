@@ -38,45 +38,47 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="14.242" height="24.242" viewBox="0 0 14.242 24.242"><path fill="none" stroke="#333" stroke-linecap="round" stroke-width="3px" d="M2106.842 2395.467l-10 10 10 10" transform="translate(-2094.721 -2393.346)"></path></svg>
           </button>
           <h2 class="carousel-title">Benzer Ürünler</h2>
-          <div class="carousel-track">
-            ${products
-              .map(
-                (product) => `
-                  <a class="carousel-card" data-id="${product.id}" href="${
-                  product.url
-                }" target="_blank" rel="noopener" tabindex="0" aria-label="${
-                  product.name
-                } - ${product.price}">
-                    <div class="carousel-inner-card">
-                      <div class="new-product-card">
-                      <div class="carousel-img-wrap">
-                        <img src="${product.img}" alt="${
-                  product.name
-                }" class="carousel-img" />
-                        <button type="button" class="carousel-heart${
-                          favorites[product.id] ? " active" : ""
-                        }" data-id="${
-                  product.id
-                }" aria-label="Favorilere ekle/kaldır">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20"><path fill="${
-                            favorites[product.id] ? "#193DB0" : "#fff"
-                          }" fill-rule="evenodd" stroke="${
-                  favorites[product.id] ? "#193DB0" : "#B6B7B9"
-                }" d="M19.97 6.449c-.277-3.041-2.429-5.247-5.123-5.247-1.794 0-3.437.965-4.362 2.513C9.57 2.147 7.993 1.2 6.228 1.2c-2.694 0-4.846 2.206-5.122 5.247-.022.135-.112.841.16 1.994.393 1.663 1.3 3.175 2.621 4.373l6.594 5.984 6.707-5.984c1.322-1.198 2.228-2.71 2.62-4.373.273-1.152.183-1.86.162-1.993z" clip-rule="evenodd"></path></svg>
-                        </button>
+          <div class="carousel-track-wrapper">
+            <div class="carousel-track">
+              ${products
+                .map(
+                  (product) => `
+                    <a class="carousel-card" data-id="${product.id}" href="${
+                    product.url
+                  }" target="_blank" rel="noopener" tabindex="0" aria-label="${
+                    product.name
+                  } - ${product.price}">
+                      <div class="carousel-inner-card">
+                        <div class="new-product-card">
+                        <div class="carousel-img-wrap">
+                          <img src="${product.img}" alt="${
+                    product.name
+                  }" class="carousel-img" />
+                          <button type="button" class="carousel-heart${
+                            favorites[product.id] ? " active" : ""
+                          }" data-id="${
+                    product.id
+                  }" aria-label="Favorilere ekle/kaldır">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20"><path fill="${
+                              favorites[product.id] ? "#193DB0" : "#fff"
+                            }" fill-rule="evenodd" stroke="${
+                    favorites[product.id] ? "#193DB0" : "#B6B7B9"
+                  }" d="M19.97 6.449c-.277-3.041-2.429-5.247-5.123-5.247-1.794 0-3.437.965-4.362 2.513C9.57 2.147 7.993 1.2 6.228 1.2c-2.694 0-4.846 2.206-5.122 5.247-.022.135-.112.841.16 1.994.393 1.663 1.3 3.175 2.621 4.373l6.594 5.984 6.707-5.984c1.322-1.198 2.228-2.71 2.62-4.373.273-1.152.183-1.86.162-1.993z" clip-rule="evenodd"></path></svg>
+                          </button>
+                        </div>
+                        <div class="carousel-info">
+                          <div class="carousel-name">${product.name}</div>
+                          <div class="carousel-price"><p class="carousel-price-text">${
+                            product.price
+                          }</p></div>
+                        </div>
+                        </div>
                       </div>
-                      <div class="carousel-info">
-                        <div class="carousel-name">${product.name}</div>
-                        <div class="carousel-price"><p class="carousel-price-text">${
-                          product.price
-                        }</p></div>
-                      </div>
-                      </div>
-                    </div>
-                  </a>
-                `
-              )
-              .join("")}
+                    </a>
+                  `
+                )
+                .join("")}
+            </div>
           </div>
           <button type="button" aria-label="right" class="carousel-arrow carousel-arrow-right" style="position:absolute;right:-40px;top:50%;transform:translateY(-50%) rotate(180deg);background:none;border:none;cursor:pointer;z-index:2;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14.242" height="24.242" viewBox="0 0 14.242 24.242"><path fill="none" stroke="#333" stroke-linecap="round" stroke-width="3px" d="M2106.842 2395.467l-10 10 10 10" transform="translate(-2094.721 -2393.346)"></path></svg>
@@ -119,6 +121,9 @@
         font-size: 32px;
         font-weight: lighter;
         font-family: 'Open Sans', Arial, sans-serif;
+      }
+      .carousel-track-wrapper {
+      overflow: hidden;
       }
       .carousel-track {
         overflow-x: auto;
