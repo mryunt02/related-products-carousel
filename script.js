@@ -43,12 +43,14 @@
               ${products
                 .map(
                   (product) => `
-                    <a class="carousel-card" data-id="${product.id}" href="${
-                    product.url
-                  }" target="_blank" rel="noopener" tabindex="0" aria-label="${
-                    product.name
-                  } - ${product.price}">
-                      <div class="carousel-inner-card">
+                    <div class="carousel-card" data-id="${
+                      product.id
+                    }" tabindex="0" aria-label="${product.name} - ${
+                    product.price
+                  }">
+                      <div class="carousel-inner-card" onclick="window.open('${
+                        product.url
+                      }', '_blank', 'noopener')">
                         <div class="new-product-card">
                         <div class="carousel-img-wrap">
                           <img src="${product.img}" alt="${
@@ -75,7 +77,7 @@
                         </div>
                         </div>
                       </div>
-                    </a>
+                    </div>
                   `
                 )
                 .join("")}
@@ -142,10 +144,12 @@
         height: fit-content;
         padding-bottom: unset;
         font-family: 'Open Sans', Arial, sans-serif;
+        
       }
       .carousel-inner-card {
         width: calc(100% - 10px);
         height: calc(100% - 10px);
+        cursor: pointer;
       }
       .carousel-img-wrap {
         position: relative;
@@ -188,6 +192,12 @@
         margin-bottom: 8px;
         color: #302e2b;
         font-family: 'Open Sans', Arial, sans-serif;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 2.8em;
       }
       .carousel-price {
         color: #193db0;
@@ -250,6 +260,112 @@
     const visibleCards = 6;
     let currentIndex = 0;
     const maxIndex = Math.max(0, $cards.length - visibleCards);
+
+    let isDragging = false;
+    let startX = 0;
+    let lastX = 0;
+    let startTransform = 0;
+
+    function getEventX(e) {
+      if (e.type && e.type.startsWith("touch")) {
+        return e.touches[0]
+          ? e.touches[0].clientX
+          : e.changedTouches[0].clientX;
+      } else {
+        return e.clientX;
+      }
+    }
+
+    function getCurrentTransform() {
+      const style = $track[0].style.transform;
+      const match = style.match(/translateX\(-?(\d+)px\)/);
+      return match ? parseInt(match[1]) : 0;
+    }
+
+    function setTransform(x) {
+      $track.css("transform", `translateX(-${x}px)`);
+    }
+
+    $track.on("mousedown", function (e) {
+      isDragging = true;
+      startX = getEventX(e);
+      lastX = startX;
+      startTransform = getCurrentTransform();
+      $track.addClass("dragging");
+      e.preventDefault();
+    });
+
+    document.addEventListener(
+      "touchstart",
+      function (e) {
+        if (e.target.closest(".carousel-track")) {
+          isDragging = true;
+          startX = getEventX(e);
+          lastX = startX;
+          startTransform = getCurrentTransform();
+          $track.addClass("dragging");
+        }
+      },
+      { passive: false }
+    );
+
+    $(document).on("mousemove", function (e) {
+      if (!isDragging) return;
+      const x = getEventX(e);
+      const cardWidth = $cards.outerWidth(true);
+      const dx = (startX - x) * 2;
+      let movedCards = Math.round(dx / cardWidth);
+      let targetIndex = Math.max(
+        0,
+        Math.min(currentIndex + movedCards, maxIndex)
+      );
+      setTransform(targetIndex * cardWidth);
+      lastX = x;
+    });
+
+    document.addEventListener(
+      "touchmove",
+      function (e) {
+        if (!isDragging) return;
+        const x = getEventX(e);
+        const cardWidth = $cards.outerWidth(true);
+        const dx = (startX - x) * 2;
+        let movedCards = Math.round(dx / cardWidth);
+        let targetIndex = Math.max(
+          0,
+          Math.min(currentIndex + movedCards, maxIndex)
+        );
+        setTransform(targetIndex * cardWidth);
+        lastX = x;
+        e.preventDefault();
+      },
+      { passive: false }
+    );
+
+    function snapToCard() {
+      const cardWidth = $cards.outerWidth(true);
+      let moved = startTransform + (startX - lastX) * 2;
+      let idx = Math.round(moved / cardWidth);
+      idx = Math.max(0, Math.min(idx, maxIndex));
+      currentIndex = idx;
+      updateCarousel();
+    }
+
+    $(document).on("mouseup", function () {
+      if (isDragging) {
+        isDragging = false;
+        $track.removeClass("dragging");
+        snapToCard();
+      }
+    });
+
+    document.addEventListener("touchend", function () {
+      if (isDragging) {
+        isDragging = false;
+        $track.removeClass("dragging");
+        snapToCard();
+      }
+    });
 
     function updateCarousel() {
       const cardWidth = $cards.outerWidth(true);
