@@ -37,7 +37,7 @@
           <button type="button" aria-label="previous" class="buttonBack___1mlaL carousel__back-button carousel-arrow carousel-arrow-left" disabled="">
             <svg xmlns="http://www.w3.org/2000/svg" width="14.242" height="24.242" viewBox="0 0 14.242 24.242"><path fill="none" stroke="#333" stroke-linecap="round" stroke-width="3px" d="M2106.842 2395.467l-10 10 10 10" transform="translate(-2094.721 -2393.346)"></path></svg>
           </button>
-          <h2 class="carousel-title">Benzer Ürünler</h2>
+          <h2 class="carousel-title">İlgini Çekebilecek Diğer Ürünler</h2>
           <div class="carousel-track-wrapper">
             <div class="carousel-track">
               ${products
