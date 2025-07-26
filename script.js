@@ -71,6 +71,7 @@
                           <div class="carousel-price"><p class="carousel-price-text">${
                             product.price
                           }</p></div>
+                          <button class="carousel-add-to-cart-btn" style="display:none;">Sepete Ekle</button>
                         </div>
                         </div>
                       </div>
@@ -200,12 +201,29 @@
       }
       .carousel-price-text {
         margin: 0 !important;
+        font-weight: bold;
+      }
+      .carousel-add-to-cart-btn {
+        height: 35px;
+        display: block;
+        background-color: #193db0;
+        color: #fff;
+        width: 100%;
+        border-radius: 5px;
+        border: none;
+        line-height: 19px;
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
       }
       @media (max-width: 992px) {
         .carousel-track {
         width: 3850px;
         }
         .carousel-title { font-size: 24px; }
+        .carousel-add-to-cart-btn {
+          display: block !important;
+        }
       }
     `;
     if (!$("head .carousel-style").length) {
