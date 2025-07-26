@@ -33,6 +33,8 @@
   function buildHTML() {
     const html = `
       <div class="carousel-container">
+      <button type="button" aria-label="previous" class="buttonBack___1mlaL carousel__back-button carousel-arrow carousel-arrow-left" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="14.242" height="24.242" viewBox="0 0 14.242 24.242"><path fill="none" stroke="#333" stroke-linecap="round" stroke-width="3px" d="M2106.842 2395.467l-10 10 10 10" transform="translate(-2094.721 -2393.346)"></path></svg></button>
+      
         <h2 class="carousel-title">Benzer Ürünler</h2>
         <div class="carousel-track">
           ${products
@@ -68,6 +70,9 @@
             )
             .join("")}
         </div>
+        <button type="button" aria-label="right" class="carousel-arrow carousel-arrow-right" style="position:absolute;right:-40px;top:50%;transform:translateY(-50%) rotate(180deg);background:none;border:none;cursor:pointer;z-index:2;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14.242" height="24.242" viewBox="0 0 14.242 24.242"><path fill="none" stroke="#333" stroke-linecap="round" stroke-width="3px" d="M2106.842 2395.467l-10 10 10 10" transform="translate(-2094.721 -2393.346)"></path></svg>
+        </button>
       </div>
     `;
     $(".product-detail").append(html);
@@ -87,6 +92,7 @@
         width: 80%;
         margin: 0 auto;
         font-family: 'Open Sans', Arial, sans-serif;
+        relative;
       }
       .carousel-title {
         font-size: 1.5rem;
